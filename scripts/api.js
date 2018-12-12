@@ -30,6 +30,7 @@ const api = (function() {
       data: JSON.stringify(updateData),
       success: callback
     });
+    console.log('update item api ran');
   };
 
   return {
