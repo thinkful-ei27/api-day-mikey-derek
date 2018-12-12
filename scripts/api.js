@@ -1,13 +1,19 @@
 'use strict';
-/* global $ */
+/* global $, store, shoppingList */
 
 const api = (function() {
   const BASE_URL = 'https://thinkful-list-api.herokuapp.com/mikey-derek';
+
+  const errorCallback = function(error) {
+    store.errorMessage(error.responseJSON.message);
+    shoppingList.render();
+  };
+
   const getItems = function(callback){
     $.getJSON(BASE_URL +'/items', callback);
   };
 
-  const createItem = function(name, callback, errorCallback){
+  const createItem = function(name, callback) {
     const newItem = JSON.stringify({
       name,
     });
@@ -18,7 +24,7 @@ const api = (function() {
       contentType: 'application/json',
       data: newItem,
       success: callback,
-      error: errorCallback
+      error: api.errorCallback
     });
   };
 
@@ -28,7 +34,8 @@ const api = (function() {
       method: 'PATCH',
       contentType: 'application/json',
       data: JSON.stringify(updateData),
-      success: callback
+      success: callback,
+      error: api.errorCallback
     });
   };
 
@@ -37,7 +44,8 @@ const api = (function() {
       url: `${BASE_URL}/items/${id}`,
       method: 'DELETE',
       contentType: 'application/json',
-      success: callback
+      success: callback,
+      error: api.errorCallback
     });
   };
 
@@ -45,6 +53,7 @@ const api = (function() {
     getItems,
     createItem,
     updateItem,
-    deleteItem
+    deleteItem,
+    errorCallback
   };
 }());

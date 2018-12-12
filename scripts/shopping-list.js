@@ -37,9 +37,12 @@ const shoppingList = (function(){
   }
 
   function generateErrorElement() {
+    let element = '';
     if(store.error !== null){
-      return ` <li>${store.error}</li>`;
+      element = ` <li>${store.error}</li>`;
     } 
+    store.error = null;
+    return element;
   } 
 
   function generateShoppingItemsString(shoppingList) {
@@ -61,10 +64,11 @@ const shoppingList = (function(){
       items = items.filter(item => item.name.includes(store.searchTerm));
     }
     // render the shopping list in the DOM
+    const errorString = generateErrorElement();
     const shoppingListItemsString = generateShoppingItemsString(items);
   
     // insert that HTML into the DOM
-    $('.js-shopping-list').html(shoppingListItemsString);
+    $('.js-shopping-list').html(errorString + shoppingListItemsString);
   }
   
   
@@ -76,8 +80,7 @@ const shoppingList = (function(){
       api.createItem(newItemName, (item) => {
         store.addItem(item);
         render();
-      }, 
-      (error) => {store.errorMessage(error.responseJSON.message);});
+      });
     });
   }
   
