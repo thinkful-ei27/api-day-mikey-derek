@@ -106,8 +106,13 @@ const shoppingList = (function(){
       event.preventDefault();
       const id = getItemIdFromElement(event.currentTarget);
       const itemName = $(event.currentTarget).find('.shopping-item').val();
-      store.findAndUpdateName(id, itemName);
+      const callback = function() { 
+        store.findAndUpdate(id, {name: itemName});
+        render();
+      };
+      api.updateItem(id, {name: itemName}, callback);
       store.setItemIsEditing(id, false);
+
       render();
     });
   }
