@@ -55,7 +55,6 @@ const shoppingList = (function(){
     }
   
     // render the shopping list in the DOM
-    console.log('`render` ran');
     const shoppingListItemsString = generateShoppingItemsString(items);
   
     // insert that HTML into the DOM
@@ -101,10 +100,14 @@ const shoppingList = (function(){
     $('.js-shopping-list').on('click', '.js-item-delete', event => {
       // get the index of the item in store.items
       const id = getItemIdFromElement(event.currentTarget);
-      // delete the item
-      store.findAndDelete(id);
-      // render the updated shopping list
-      render();
+      // delete the item from the server
+      const callback = function() {
+        store.findAndDelete(id);
+        // render the updated shopping list
+        render();        
+      };
+      api.deleteItem(id, callback);
+
     });
   }
   
