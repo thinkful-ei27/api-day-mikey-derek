@@ -33,6 +33,10 @@ const store = (function(){
   const setSearchTerm = function(term) {
     this.searchTerm = term;
   };
+  
+  const errorMessage = function(error){
+    this.error = error;
+  };
 
   return {
     items: [],
@@ -47,6 +51,7 @@ const store = (function(){
     toggleCheckedFilter,
     setSearchTerm,
     setItemIsEditing,
+    errorMessage,
   };
   
 }());

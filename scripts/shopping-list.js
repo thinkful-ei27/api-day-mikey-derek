@@ -8,6 +8,7 @@ const shoppingList = (function(){
   function generateItemElement(item) {
     const checkedClass = item.checked ? 'shopping-item__checked' : '';
     const editBtnStatus = item.checked ? 'disabled' : '';
+    
 
     let itemTitle = `<span class="shopping-item ${checkedClass}">${item.name}</span>`;
     if (item.isEditing) {
@@ -34,8 +35,13 @@ const shoppingList = (function(){
         </div>
       </li>`;
   }
-  
-  
+
+  function generateErrorElement() {
+    if(store.error !== null){
+      return ` <li>${store.error}</li>`;
+    } 
+  } 
+
   function generateShoppingItemsString(shoppingList) {
     const items = shoppingList.map((item) => generateItemElement(item));
     return items.join('');
@@ -48,12 +54,12 @@ const shoppingList = (function(){
     if (store.hideCheckedItems) {
       items = items.filter(item => !item.checked);
     }
+
   
     // Filter item list if store prop `searchTerm` is not empty
     if (store.searchTerm) {
       items = items.filter(item => item.name.includes(store.searchTerm));
     }
-  
     // render the shopping list in the DOM
     const shoppingListItemsString = generateShoppingItemsString(items);
   
@@ -70,7 +76,8 @@ const shoppingList = (function(){
       api.createItem(newItemName, (item) => {
         store.addItem(item);
         render();
-      });
+      }, 
+      (error) => {store.errorMessage(error.responseJSON.message);});
     });
   }
   
